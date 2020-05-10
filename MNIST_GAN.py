@@ -90,11 +90,7 @@ class GAN():
                 print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100 * d_loss[1], g_loss))
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
-            if epoch % 100:
-                subprocess.call(["git","pull"])
-                subprocess.call(["git","add","."])
-                subprocess.call(["git","commit","-a","-m","added images_test"])
-                subprocess.call(["git","push"])
+                
 
     def sample_images(self, epoch):
         r, c = 5, 5
@@ -114,6 +110,10 @@ class GAN():
             
         fig.savefig(Path.joinpath(Path.cwd(),"images/%d.png"%epoch))
         plt.close()
+        subprocess.call(["git","pull"])
+        subprocess.call(["git","add","."])
+        subprocess.call(["git","commit","-a","-m","added images"])
+        subprocess.call(["git","push"])
 
 
 if __name__ == '__main__':
