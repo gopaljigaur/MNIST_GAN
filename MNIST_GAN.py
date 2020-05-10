@@ -14,6 +14,7 @@ from keras.models import Sequential, Model
 from tensorflow.keras.optimizers import Adam
 import matplotlib.pyplot as plt
 import numpy as np
+import subprocess
 
 
 class GAN():
@@ -89,6 +90,11 @@ class GAN():
                 print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100 * d_loss[1], g_loss))
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
+            if epoch % 100:
+                subprocess.call(["git","pull"])
+                subprocess.call(["git","add","."])
+                subprocess.call(["git","commit","-a","-m","added images_test"])
+                subprocess.call(["git","push"])
 
     def sample_images(self, epoch):
         r, c = 5, 5
