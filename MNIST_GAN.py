@@ -26,9 +26,7 @@ class GAN():
         optimizer = Adam(0.0002, 0.5)
         self.discriminator = self.build_discriminator()
         self.discriminator.trainable = False
-        self.discriminator.compile(loss='binary_crossentropy',
-                                   optimizer=optimizer,
-                                   metrics=['accuracy'])
+        self.discriminator.compile(loss='binary_crossentropy',optimizer=optimizer,metrics=['accuracy'])
         self.generator = self.build_generator()
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
@@ -99,11 +97,11 @@ class GAN():
         gen_imgs = 0.5 * gen_imgs + 0.5
         fig, axs = plt.subplots(r, c)
         cnt = 0
-        #for i in range(r):
-        #    for j in range(c):
-        #        axs[i, j].imshow(gen_imgs[cnt, :, :, 0], cmap='gray')
-        #        axs[i, j].axis('off')
-        #        cnt += 1
+        for i in range(r):
+            for j in range(c):
+                axs[i, j].imshow(gen_imgs[cnt, :, :, 0], cmap='gray')
+                axs[i, j].axis('off')
+                cnt += 1
                 
         if not Path.is_dir(Path.joinpath(Path.cwd(),"images")):
             Path.mkdir(Path.joinpath(Path.cwd(),"images"))
@@ -115,10 +113,3 @@ class GAN():
 if __name__ == '__main__':
     gan = GAN()
     gan.train(epochs=100000, batch_size=132, sample_interval=1000)
-
-
-# In[ ]:
-
-
-
-
