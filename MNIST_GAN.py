@@ -26,8 +26,9 @@ class GAN():
         self.latent_dim = 100
         optimizer = Adam(0.0002, 0.5)
         self.discriminator = self.build_discriminator()
-        self.discriminator.trainable = False
+        
         self.discriminator.compile(loss='binary_crossentropy',optimizer=optimizer,metrics=['accuracy'])
+        self.discriminator.trainable = False
         self.generator = self.build_generator()
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
