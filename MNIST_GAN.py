@@ -24,11 +24,11 @@ class GAN():
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.latent_dim = 100
-        optimizer = Adam(0.0002, 0.5)
+        optimizer = Adam(0.0001, 0.5)
         self.discriminator = self.build_discriminator()
         
         self.discriminator.compile(loss='binary_crossentropy',optimizer=optimizer,metrics=['accuracy'])
-        self.discriminator.trainable = False
+    
         self.generator = self.build_generator()
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
@@ -87,8 +87,12 @@ class GAN():
             d_loss_real = self.discriminator.train_on_batch(imgs, valid)
             d_loss_fake = self.discriminator.train_on_batch(gen_imgs, fake)
             d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
-            if epoch%100==0:
-                print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100 * d_loss[1], g_loss))
+            if epoch%1000==0:
+                text = "%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100 * d_loss[1], g_loss)
+                print(text)
+                f =open((Path.joinpath(Path.cwd(),"images/status.txt")),"w+")
+                f.write(text)
+                f.close()
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
                 
@@ -111,6 +115,7 @@ class GAN():
             
         fig.savefig(Path.joinpath(Path.cwd(),"images/%d.png"%epoch))
         plt.close()
+        
         subprocess.call(["git","pull"])
         subprocess.call(["git","add","."])
         subprocess.call(["git","commit","-a","-m","added images"])
@@ -119,4 +124,4 @@ class GAN():
 
 if __name__ == '__main__':
     gan = GAN()
-    gan.train(epochs=100000, batch_size=132, sample_interval=1000)
+    gan.train(epochs=1000000, batch_size=132, sample_interval=10000)
